@@ -1,5 +1,6 @@
 {
   "expo": {
+    "entryPoint": "./node_modules/expo/AppEntry.js",
     "name": "GmImproToolkit",
     "slug": "GmImproToolkit",
     "version": "1.0.0",

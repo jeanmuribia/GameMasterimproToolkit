@@ -1,23 +1,46 @@
-// SignupScreen.tsx
-
-import React from 'react';
-import { View, Text, Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, Text, Button, TextInput, Alert } from 'react-native';
+import AuthService from './AuthService';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const SignupScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
-  const handleSignup = () => {
-    // Logique d'inscription avec l'email et le mot de passe
+  const handleSignup = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password.');
+      return;
+    }
+
+    const success = await AuthService.signup(email, password);
+    if (success) {
+      Alert.alert('Success', 'Account created successfully.');
+      // Peut-être rediriger l'utilisateur vers une autre page ou effectuer une autre action après l'inscription réussie
+    } else {
+      Alert.alert('Error', 'Failed to create account. Please try again.');
+    }
   };
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Signup Screen</Text>
-      {/* Champ de texte pour l'email et le mot de passe */}
+      <TextInput
+        style={{ height: 40, width: '40%', borderColor: 'gray', borderWidth: 1, marginVertical: 10 }}
+        onChangeText={setEmail}
+        value={email}
+        placeholder="Email"
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={{ height: 40, width: '80%', borderColor: 'gray', borderWidth: 1, marginVertical: 10 }}
+        onChangeText={setPassword}
+        value={password}
+        placeholder="Password"
+        secureTextEntry
+      />
       <Button title="Signup" onPress={handleSignup} />
-      {/* Bouton pour revenir en arrière */}
-      <Button title="Back" onPress={() => navigation.goBack()} />
     </View>
   );
 };
