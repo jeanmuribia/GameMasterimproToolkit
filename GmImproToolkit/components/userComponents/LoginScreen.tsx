@@ -3,8 +3,10 @@ import { Text, TouchableHighlight, View, StyleSheet, TextInput } from 'react-nat
 import AuthService from './AuthService'; // Make sure the path is correct
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen: React.FC = () => {
+  const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -12,6 +14,10 @@ const LoginScreen: React.FC = () => {
     try {
       await AuthService.login(email, password);
       toast.success('Login Successful', { position: "bottom-left" });
+      
+      const params: { username: string } = { username: email }; // Create params object
+      
+      navigation.navigate('Dashboard', params); // Pass params to navigation.navigate
     } catch (error) {
       console.error(error);
       toast.error('Username or password is incorrect', { position: "bottom-left" });
@@ -40,9 +46,15 @@ const LoginScreen: React.FC = () => {
       >
         <Text style={styles.textStyle}>Login</Text>
       </TouchableHighlight>
+      <TouchableHighlight>
+        <Text style={styles.textStyle} 
+              onPress={() => navigation.navigate('Signup')}> Don't have an account? Sign up
+        </Text>
+      </TouchableHighlight>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
@@ -79,6 +91,14 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5,
   },
 });
 
